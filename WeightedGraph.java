@@ -29,6 +29,9 @@ class Edge implements Comparable {
         weight = w;
     }
 
+    /* 
+    * Comparison is necessary since Edges are loaded into Priority Queue
+    */
     public int compareTo(Object o){
         Edge e = (Edge) o;
         if(this.weight < e.weight) {
@@ -41,6 +44,12 @@ class Edge implements Comparable {
     }
 }
 
+/**
+ * Weighted Graph based that uses a Dependency Matrix to 
+ * hold edges.
+ *
+ * 
+ */
 public class WeightedGraph{
     public Vertex[] vertexList;
     public int[][] adjMatrix;
@@ -72,9 +81,12 @@ public class WeightedGraph{
         }
     }
 
-    // Calculates Minimum spanning tree of Undirected Graph.
-    // Overall complexity O(N)
+    /**
+     * Calculates Minimum spanning tree of Undirected Graph.
+     * Overall TC O(N) ; Space Complexity O(N)
+    */ 
     private void mst(){
+        /* Priority Queue to hold the edges */
         Queue<Edge> edgePriorityQueue= new PriorityQueue<>();
         HashSet<Integer> mst = new HashSet<>();
         int currentVertex = 0;
@@ -98,6 +110,7 @@ public class WeightedGraph{
                 pathEdge = edgePriorityQueue.poll();
             }
             if(pathEdge == null) {
+                // Exit condition
                 break;
             }
 
@@ -108,6 +121,7 @@ public class WeightedGraph{
             System.out.println(vertexList[pathEdge.start].val+
                     vertexList[pathEdge.end].val+pathEdge.weight);
 
+            // Start from the end vertex of that newly added Edge. 
             currentVertex = pathEdge.end;
             System.out.println("---------------------------------------------------------");
         }
@@ -116,7 +130,15 @@ public class WeightedGraph{
 
     }
 
-    // Returns all the adjacent edges to Vertex S, O(N)
+    /**
+     * Returns all the adjacent edges to Vertex s in  O(N)
+     * 
+     * Before an edge is added, it is filtered based on vertices covered so far.
+     * @param s Source Vertex
+     * @param mst HashSet containing the vertices covered so far in MST
+     * @param edgePriorityQueue A priority queue containing all the edges that have 
+     * are visible/covered. 
+     */
     private void fillPriorityQueue(int s, HashSet<Integer> mst, Queue<Edge> edgePriorityQueue) {
         for(int i=0;i<size;i++) {
             // There is a weighted edge between s and i
@@ -131,6 +153,10 @@ public class WeightedGraph{
         }
     }
 
+    /**
+     * To print.  
+     * 
+     */
     private String getEdgeString(Edge pathEdge) {
         return vertexList[pathEdge.start].val+vertexList[pathEdge.end].val+pathEdge.weight;
     }
